@@ -8,7 +8,7 @@ from django.shortcuts import render
 # Create your views here.
 from django.template.defaulttags import lorem
 
-from .models import Product
+from .models import Product, Order
 
 
 def shop_index(request: HttpRequest) -> HttpResponse:
@@ -36,3 +36,9 @@ def products_list(request: HttpRequest) -> HttpResponse:
         "products": Product.objects.all(),
      }
     return render(request, 'shopapp/products-list.html', context=context)
+
+def orders_list(request: HttpRequest) -> HttpResponse:
+    context = {
+        "orders": Order.objects.select_related("user").prefetch_related('products').all(),
+     }
+    return render(request, 'shopapp/orders-list.html', context=context)
